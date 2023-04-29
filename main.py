@@ -29,12 +29,17 @@ class Todo(db.Model):
 
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def hello_world():
-    todo=Todo(title="hey",desc="hhh")
-    db.session.add(todo)
-    db.session.commit()
-    return render_template('index.html')
+    if request.method=='POST':
+        title = request.form['title']
+        desc = request.form['desc']
+        todo = Todo(title=title, desc=desc)
+        db.session.add(todo)
+        db.session.commit()
+        
+    allTodo = Todo.query.all() 
+    return render_template('index.html', allTodo=allTodo)
 @app.route('/home')
 def sum():
     return "5"
